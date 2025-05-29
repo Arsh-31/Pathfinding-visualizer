@@ -18,6 +18,6 @@ A web-based visualizer for pathfinding algorithms like A\*, Dijkstra, BFS, and D
 
 ## 🧑‍💻 Tech Stack
 
-- **Framework:** Next.js
-- **Styling:** Tailwind CSS
-- **Language:** TypeScript
+- **Framework:** Next.js (v13.4.0)
+- **Styling:** Tailwind CSS (v3.3.2)
+- **Language:** TypeScript (v5.1.3)
