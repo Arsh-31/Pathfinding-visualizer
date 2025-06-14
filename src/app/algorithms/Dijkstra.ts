@@ -86,10 +86,7 @@ function reconstructPath(
   path.reverse();
 
   if (path[0].row != start.row || path[0].col != start.col) {
-    console.log("Son of a bitch!!!!");
     return [];
   }
-
-  console.log("patH: ", path);
   return path;
 }

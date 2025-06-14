@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { cn } from "@/lib/utils";
 interface GridProps {
   rows: number;
   cols: number;
@@ -51,6 +51,7 @@ const Grid: React.FC<GridProps> = ({
   const [shortestPath, setShortestPath] = useState<
     { row: number; col: number }[]
   >([]);
+  const [isPathFound, setIsPathFound] = useState(false);
 
   const grid = Array.from({ length: rows }, (_, row) =>
     Array.from({ length: cols }, (_, col) =>
@@ -69,6 +70,7 @@ const Grid: React.FC<GridProps> = ({
     setRunAlgorithm(false);
     setVisitedNodes([]);
     setShortestPath([]);
+    setIsPathFound(false);
 
     const { visitedOrder, shortestPath } = algorithm(
       grid,
@@ -85,6 +87,9 @@ const Grid: React.FC<GridProps> = ({
 
     // Animate shortest path after visiting nodes
     setTimeout(() => {
+      if (shortestPath.length > 0) {
+        setIsPathFound(true);
+      }
       shortestPath.forEach((node, index) => {
         setTimeout(() => {
           setShortestPath((prev) => [...prev, node]);
@@ -98,6 +103,7 @@ const Grid: React.FC<GridProps> = ({
       clearPathRef.current = () => {
         setVisitedNodes([]);
         setShortestPath([]);
+        setIsPathFound(false);
       };
     }
   }, [clearPathRef]);
@@ -121,61 +127,84 @@ const Grid: React.FC<GridProps> = ({
 
   return (
     <div
-      className="grid w-full h-full"
+      className={cn(
+        "grid w-full h-full",
+        isPathFound && "path-found"
+      )}
       style={{
         gridTemplateColumns: `repeat(${cols}, 1fr)`,
         gridTemplateRows: `repeat(${rows}, 1fr)`,
       }}
     >
       {Array.from({ length: rows }).map((_, row) =>
-        Array.from({ length: cols }).map((_, col) => (
-          <div
-            key={`${row}-${col}`}
-            className={`border border-[#1B2A41] w-full h-full cursor-pointer
-              ${
-                startNode?.row === row && startNode?.col === col
-                  ? "bg-[#8FC0A9]" //start
-                  : ""
-              }
-              ${
-                endNode?.row === row && endNode?.col === col
-                  ? "bg-[#E54F6D]" // end
-                  : ""
-              }
-              ${
-                obstacleNodes.some(
-                  (node) => node.row === row && node.col === col
-                )
-                  ? "bg-[#1B2A41]" // obstacles
-                  : ""
-              }
-              ${
-                visitedNodes.some(
-                  (node) => node.row === row && node.col === col
-                ) &&
-                !shortestPath.some(
-                  (node) => node.row === row && node.col === col
-                ) &&
-                !(startNode?.row === row && startNode?.col === col)
-                  ? "bg-[#BFDBF7] animate-visited" // visited // transition duration-500
-                  : ""
-              }
-              ${
-                shortestPath.some(
-                  (node) => node.row === row && node.col === col
-                ) &&
-                !(
-                  (startNode?.row === row && startNode?.col === col) ||
-                  (endNode?.row === row && endNode?.col === col)
-                )
-                  ? "bg-[#F4D35E] transition duration-500" // final path
-                  : ""
-              }`}
-            onClick={(event) => handleCellClick(event, row, col)}
-            // onMouseDown={(event) => handleMouseDown(event, row, col)}
-            // onMouseEnter={(event) => handleMouseEnter(event, row, col)}
-          ></div>
-        ))
+        Array.from({ length: cols }).map((_, col) => {
+          const isStart = startNode?.row === row && startNode?.col === col;
+          const isEnd = endNode?.row === row && endNode?.col === col;
+          const isObstacle = obstacleNodes.some(
+            (node) => node.row === row && node.col === col
+          );
+          const isVisited = visitedNodes.some(
+            (node) => node.row === row && node.col === col
+          );
+          const isPath = shortestPath.some(
+            (node) => node.row === row && node.col === col
+          );
+
+          const baseClasses =
+            "border border-[--border] w-full h-full cursor-pointer transition duration-200 flex items-center justify-center min-h-[1.5rem] min-w-[1.5rem] relative";
+
+          const borderColor = "border-[var(--secondary)]";
+          let cellClass = "";
+
+          if (isStart) {
+            cellClass =
+              "bg-[var(--primary)] text-[var(--primary-foreground)] font-bold";
+          } else if (isEnd) {
+            cellClass =
+              "bg-[var(--primary)] text-[var(--primary-foreground)] font-bold";
+          } else if (isObstacle) {
+            cellClass = "bg-[var(--wall)]"; // Dark muted wall
+          } else if (isPath) {
+            cellClass = "bg-[var(--path)] animate-path"; // Neutral gray path with subtle glow
+          } else if (isVisited) {
+            cellClass = "animate-visited"; // Animated gray shades
+          }
+
+          return (
+            <div
+              key={`${row}-${col}`}
+              className={cn(
+                baseClasses,
+                borderColor,
+                cellClass,
+                "hover:brightness-105",
+                "group" // Add group for hover effects
+              )}
+              onClick={(e) => handleCellClick(e, row, col)}
+            >
+              {isStart && (
+                <>
+                  <span className="absolute inset-0 flex items-center justify-center text-lg">
+                    S
+                  </span>
+                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[var(--primary)] text-[var(--primary-foreground)] px-2 py-0.5 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    Start
+                  </span>
+                </>
+              )}
+              {isEnd && (
+                <>
+                  <span className="absolute inset-0 flex items-center justify-center text-lg">
+                    E
+                  </span>
+                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[var(--primary)] text-[var(--primary-foreground)] px-2 py-0.5 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    End
+                  </span>
+                </>
+              )}
+            </div>
+          );
+        })
       )}
     </div>
   );
