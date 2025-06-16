@@ -1,13 +1,9 @@
+"use client";
+
 import React from "react";
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
-  NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+import { Moon, Sun } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { useTheme } from "next-themes";
 
 interface NavbarProps {
   placeStartNode: () => void;
@@ -41,10 +47,11 @@ const Navbar: React.FC<NavbarProps> = ({
   generateRandomWalls,
   resetGrid,
 }) => {
+  const { setTheme } = useTheme();
   return (
     <div
       id="navbar"
-      className="px-6 py-4 border-b shadow-sm bg-background text-foreground"
+      className="flex justify-between px-6 py-4 border-b shadow-sm bg-background text-foreground"
     >
       <NavigationMenu className="w-full">
         <NavigationMenuList className="flex justify-between w-full items-center gap-6 flex-wrap">
@@ -60,7 +67,9 @@ const Navbar: React.FC<NavbarProps> = ({
                 <SelectValue placeholder="Select Algorithm" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Dijkstra">Dijkstra's Algorithm</SelectItem>
+                <SelectItem value="Dijkstra">
+                  Dijkstra&apos;s Algorithm
+                </SelectItem>
                 <SelectItem value="AStar">A* Algorithm</SelectItem>
                 <SelectItem value="BFS">BFS</SelectItem>
                 <SelectItem value="DFS">DFS</SelectItem>
@@ -87,6 +96,27 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
         </NavigationMenuList>
       </NavigationMenu>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+            <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => setTheme("light")}>
+            Light
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("dark")}>
+            Dark
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("system")}>
+            System
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
