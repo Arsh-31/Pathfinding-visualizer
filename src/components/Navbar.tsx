@@ -32,7 +32,7 @@ interface NavbarProps {
   setSelectedAlgorithm: React.Dispatch<React.SetStateAction<string>>;
   clearPath: () => void;
   generateRandomMaze: () => void;
-  generateRandomWalls: () => void;
+  // generateRandomWalls: () => void;
   resetGrid: () => void;
 }
 
@@ -44,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({
   setSelectedAlgorithm,
   clearPath,
   generateRandomMaze,
-  generateRandomWalls,
+  // generateRandomWalls,
   resetGrid,
 }) => {
   const { setTheme } = useTheme();
@@ -85,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center space-x-3">
             <Button onClick={placeStartNode}>Set Start Node</Button>
             <Button onClick={placeEndNode}>Set End</Button>
-            <Button onClick={generateRandomWalls}>Add Walls</Button>
+            {/* <Button onClick={generateRandomWalls}>Add Walls</Button> */}
             <Button onClick={clearPath}>Clear Path</Button>
           </div>
 

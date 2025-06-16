@@ -15,8 +15,8 @@ interface GridProps {
   // setObstacleNodes: React.Dispatch<
   //   React.SetStateAction<{ row: number; col: number }[]>
   // >;
-  placingObstacles: boolean;
-  setPlacingObstacles: React.Dispatch<React.SetStateAction<boolean>>;
+  // placingObstacles: boolean;
+  // setPlacingObstacles: React.Dispatch<React.SetStateAction<boolean>>;
   runAlgorithm: boolean;
   setRunAlgorithm: React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -127,10 +127,7 @@ const Grid: React.FC<GridProps> = ({
 
   return (
     <div
-      className={cn(
-        "grid w-full h-full",
-        isPathFound && "path-found"
-      )}
+      className={cn("grid w-full h-full", isPathFound && "path-found")}
       style={{
         gridTemplateColumns: `repeat(${cols}, 1fr)`,
         gridTemplateRows: `repeat(${rows}, 1fr)`,

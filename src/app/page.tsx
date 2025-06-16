@@ -11,9 +11,16 @@ import { DFS } from "./algorithms/DFS";
 const PathfindingVisualizer = () => {
   const [rows, setRows] = useState(0);
   const [cols, setCols] = useState(0);
-  const [startNode, setStartNode] = useState<{ row: number; col: number } | null>(null);
-  const [endNode, setEndNode] = useState<{ row: number; col: number } | null>(null);
-  const [obstacleNodes, setObstacleNodes] = useState<{ row: number; col: number }[]>([]);
+  const [startNode, setStartNode] = useState<{
+    row: number;
+    col: number;
+  } | null>(null);
+  const [endNode, setEndNode] = useState<{ row: number; col: number } | null>(
+    null
+  );
+  const [obstacleNodes, setObstacleNodes] = useState<
+    { row: number; col: number }[]
+  >([]);
   const [runAlgorithm, setRunAlgorithm] = useState(false);
   const [selectedAlgorithm, setSelectedAlgorithm] = useState("Dijkstra");
   const clearPathRef = useRef<(() => void) | null>(null);
@@ -23,7 +30,7 @@ const PathfindingVisualizer = () => {
       const cellSize = 25;
       const availableWidth = window.innerWidth - 40;
       const availableHeight = window.innerHeight - 100;
-      
+
       const newCols = Math.floor(availableWidth / cellSize);
       const newRows = Math.floor(availableHeight / cellSize);
 
@@ -38,11 +45,16 @@ const PathfindingVisualizer = () => {
 
   const getAlgorithm = () => {
     switch (selectedAlgorithm) {
-      case "AStar": return AStar;
-      case "Dijkstra": return Dijkstra;
-      case "BFS": return BFS;
-      case "DFS": return DFS;
-      default: return Dijkstra;
+      case "AStar":
+        return AStar;
+      case "Dijkstra":
+        return Dijkstra;
+      case "BFS":
+        return BFS;
+      case "DFS":
+        return DFS;
+      default:
+        return Dijkstra;
     }
   };
 
@@ -67,9 +79,9 @@ const PathfindingVisualizer = () => {
       row: Math.floor(startIndex / cols),
       col: startIndex % cols,
     };
-    const end = { 
-      row: Math.floor(endIndex / cols), 
-      col: endIndex % cols 
+    const end = {
+      row: Math.floor(endIndex / cols),
+      col: endIndex % cols,
     };
 
     for (let row = 0; row < rows; row++) {
@@ -136,6 +148,8 @@ const PathfindingVisualizer = () => {
         setRunAlgorithm={setRunAlgorithm}
         algorithm={getAlgorithm()}
         clearPathRef={clearPathRef}
+        // placingObstacles={placingObstacles}
+        // setPlacingObstacles={setPlacingObstacles}
       />
     </div>
   );
